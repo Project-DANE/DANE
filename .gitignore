@@ -4,3 +4,4 @@ env.py
 .DS_Store
 __pycache__
 *.xlsx
+*.pdf
