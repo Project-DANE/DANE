@@ -1,4 +1,4 @@
-import python as pd
+import pandas as pd
 import numpy as np
 
 df = pd.read_csv('cws_residents.csv')
@@ -25,4 +25,7 @@ df = df.rename(columns = {'HPerson': 'id',
 # Rename columns into a pythonic format
 
 df = df[df.sStatus == 'Current']
-# Eliminate duplicate charges by 
+# Eliminate duplicate charges by citing only current leases
+
+df = df.reset_index(drop=True)
+# Reset the index to account for duplicates dropped
