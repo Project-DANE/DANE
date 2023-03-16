@@ -1,5 +1,11 @@
 import pandas as pd
 import numpy as np 
+<<<<<<< HEAD
+=======
+
+import 
+
+>>>>>>> origin/main
 def get_cws_data(): 
     
     
@@ -82,6 +88,7 @@ def train_vailidate_test_split(df, target, strat = None):
     
     return train, validate, test, X_train, y_train, X_val, y_val, X_test, y_test
 
+<<<<<<< HEAD
 def scale_splits(X_train, X_val, X_test, scaler, columns = False):
     '''
     Accepts input of a train validate test split and a specific scaler. The function will then scale
@@ -116,3 +123,5 @@ def scale_splits(X_train, X_val, X_test, scaler, columns = False):
         val_scaled = X_val.copy()
         test_scaled = X_test.copy()
     return train_scaled, val_scaled, test_scaled
+=======
+>>>>>>> origin/main

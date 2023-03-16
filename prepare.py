@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 df = pd.read_csv('cws_residents.csv')
 # Pull CSV that has been queried from CWS database
 
@@ -10,6 +11,8 @@ df = df.drop(columns = ['HMY', 'HMYPerson', 'Rent', 'SRENT', 'hTenant', 'hTent',
 
 df = df.rename(columns = {'HPerson': 'id',
 =======
+=======
+>>>>>>> origin/main
 
 def prep(df):
 
@@ -21,12 +24,16 @@ def prep(df):
     
     # Rename columns into a pythonic format
     df = df.rename(columns = {'HPerson': 'id',
+<<<<<<< HEAD
+>>>>>>> origin/main
+=======
 >>>>>>> origin/main
                    'STOTALAMOUNT': 'total_charges',
                    'SAmountPaid': 'amount_paid',
                    'BOPEN': 'open',
                    'SNOTES': 'description',
                    'HRetentionacct': 'charge_code',
+<<<<<<< HEAD
 <<<<<<< HEAD
                    'HProperty': 'prop_id',
                    'SNAME':'charge_name',
@@ -45,6 +52,8 @@ df = df[df.sStatus == 'Current']
 df = df.reset_index(drop=True)
 # Reset the index to account for duplicates dropped
 =======
+=======
+>>>>>>> origin/main
                    'HProperty': 'property_id',
                    'sStatus': 'status',
                    'SNAME':'charge_name',
@@ -65,5 +74,9 @@ df = df.reset_index(drop=True)
     df = df.reset_index(drop=True)
     
     # return a dataframe
+<<<<<<< HEAD
+    return df
+>>>>>>> origin/main
+=======
     return df
 >>>>>>> origin/main
