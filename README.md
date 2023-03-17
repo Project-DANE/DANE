@@ -46,28 +46,28 @@ TBD.
 
 | Target Variable |     Definition     |
 | --------------- | ------------------ |
-|      bad_resident    | 1 or 0 |
+|      bad_resident    | 1 for resident that caused loss to company, 0 for otherwise |
 
 | Feature  | Definition |
 | ------------- | ------------- |
-| id | Customer id |
-| total_charges | Total charge  |
-| amount_paid | Charge |
-| open |  Is transaction for a charge open or close?|
+| id | Tenant Identification Number |
+| total_charges | Total charges resident has incurred living at apartment   |
+| amount_paid | Amount tenant has paid towards total charges |
+| open |  0 is transaction total charge is closed -1 is transaction total charge open|
 | charge_code | Code of a charge  |
-| description | Description of a charge |
-| prop_id | Property id |
+| description | Description of a charge with date|
+| prop_id | Related to property name and location  |
 | charge_name | Name of a charge  |
-| sStatus | Status of a customer |
-| rent | Rent of a month |
-| term | Rent period in a month |  
-| monthly_inc | Monthly income of a customer |
-| GuarantorRequired | Does a customer require a guarrantor? True or False |
-| total_inc | Yearly income of a customer |
-| Recommendation | Steps to take for an applicant |
-| age | Age of a customer |
-| risk_score | predetermined score of an applicant associated with a risk|
-| reason | Reason that drove decision |
+| sStatus | Status of a tenant (current or past) |
+| rent | Rent per month |
+| term | Lease contract in months |  
+| monthly_inc | Monthly income of a tenant |
+| GuarantorRequired | If a tenant requires a guarrantor |
+| total_inc | Yearly income of a tenant |
+| Recommendation | Acceptance status of applicant |
+| age | Age of a tenant |
+| risk_score | Predetermined score of how risky an applicant is at the time of applying |
+| reason | Reason that drove decision to recommedation |
 
 
 
