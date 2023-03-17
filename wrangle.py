@@ -1,13 +1,10 @@
 import pandas as pd
-<<<<<<< HEAD
 import numpy as np 
 from sklearn.model_selection import train_test_split
-=======
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 
->>>>>>> origin/main
 def get_cws_data(): 
     
     
@@ -66,12 +63,9 @@ def get_cws_data():
     # Sort by id to get the final result
     df = df_combined.sort_values('id')
     
-<<<<<<< HEAD
     df = df.reset_index(drop = True)
-=======
     # Reset the index to account for duplicates dropped
     df = df.reset_index(drop=True)
->>>>>>> origin/main
 
     return df
 
@@ -119,10 +113,7 @@ def scale_splits(X_train, X_val, X_test, scaler, columns = False):
         train_scaled.update(train_initial)
         val_scaled.update(val_initial)
         test_scaled.update(test_initial)
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/main
     else:
         scale = scaler.fit(X_train)
         train_scaled = pd.DataFrame(scale.transform(X_train),
@@ -134,9 +125,7 @@ def scale_splits(X_train, X_val, X_test, scaler, columns = False):
         train_scaled = X_train.copy()
         val_scaled = X_val.copy()
         test_scaled = X_test.copy()
-<<<<<<< HEAD
     return train_scaled, val_scaled, test_scaled
-=======
     
     return train_scaled, val_scaled, test_scaled
 
@@ -194,8 +183,6 @@ def model_prep(df):
     This model takes a complete df resplits it using the same random state along with dropping columns,
     aliasing columns, creating dummies and otherwise prepping the data for modeling
     '''
-   
-    df = remove_outliers(df, 'age')
     df = col_drop(df)
     df.monthly_inc = np.where(df.monthly_inc >= 20000, df.monthly_inc/12, df.monthly_inc)
     df.total_inc = np.where(df.total_inc == 0, df.monthly_inc * 12, df.total_inc)
@@ -206,13 +193,10 @@ def model_prep(df):
     df.rent = df.rent.apply(rent_change)
     dummies = pd.get_dummies(df[['prop_id', 'Recommendation']])
     df = pd.concat([df, dummies], axis = 1)
-    train, validate, test, X_train, y_train, X_val, y_val, X_test, y_test = train_vailidate_test_split(df, 'bad_resident', 'bad_resident')
-    train_scaled, val_scaled, test_scaled = scale_splits(X_train, X_val, X_test, StandardScaler(), columns = ['rent', 'monthly_inc', 
-                                                                                                              'total_inc', 'age', 'risk_score'])
+    train, validate, test, X_train, y_train, X_val, y_val, X_test, y_test = train_vailidate_test_split(df,'bad_resident',
+                                                                                                       'bad_resident')
+    train_scaled, val_scaled, test_scaled = scale_splits(X_train, X_val, X_test, StandardScaler(), columns =['rent','monthly_inc','total_inc', 'age', 'risk_score'])
     return y_train, y_val, y_test, train_scaled, val_scaled, test_scaled
 
 
 
-
-
->>>>>>> origin/main
