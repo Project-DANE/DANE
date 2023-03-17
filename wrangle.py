@@ -1,9 +1,7 @@
 import pandas as pd
-import numpy as np 
-
-from sklearn.model_selection import train_test_split
-from sklearn.model_selection import train_test_split
+import numpy as np
 from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
 
 def get_cws_data(): 
     
@@ -46,6 +44,7 @@ def get_cws_data():
     df['bad_resident'] = np.where(df.bad_resident == True, 1, 0)
     
     df = df.drop_duplicates(subset = ['id', 'bad_resident'])
+    df = remove_outliers(df, 'age')
     
     #Filter by bad resident
     df_bad = df[df['bad_resident'] == 1]
@@ -125,9 +124,77 @@ def scale_splits(X_train, X_val, X_test, scaler, columns = False):
     
     return train_scaled, val_scaled, test_scaled
 
+def states(val):
+    '''
+    This funciton takes in a column of values and uses a previously established property key to 
+    convert each property id into the name of the state in which the property resides
+    '''
+    if val in range(53,116) or val in range(152,159) or val in [198,218,229,252,440,441,442,458]:
+        return 'Texas'
+    elif val in range(116,124) or val in [159, 444]:
+        return 'North Carolina'
+    elif val in range(125,131) or val in [164,183,212,213,217, 253]:
+        return 'Colorado'
+    elif val in range(142,147) or val in [216]:
+        return 'Arizona'
+    elif val == 131:
+        return 'California'
+    elif val in range(132,142) or val in [385,443,459]:
+        return 'Georgia'
+    elif val in [277,280]:
+        return 'Tennessee'
+    elif val in range(147,152) or val in [160,161,162,163]:
+        return 'Washington'
 
+def remove_outliers(data, col):
+    q1, q3 = np.percentile(data[col], [5, 95])
+    iqr = q3 - q1
+    
+    lower_bound = q1 - 1.5 * iqr
+    upper_bound = q3 + 1.5 * iqr
+    
+    filtered_data = [x for x in data[col] if (x >= lower_bound) and (x <= upper_bound)]
+    
+    filtered_age = filtered_data
+    filtered_df = data.loc[data[col].isin(filtered_age)]
+    
+    return filtered_df
 
+def col_drop(df):
+     df = df.drop(columns = ['id', 'total_charges', 'amount_paid', 'open', 'charge_code',
+                             'description', 'charge_name', 'sStatus', 'reason', 'GuarantorRequired'])
 
+        
+def rent_change(val):
+    if val in [0, 100]:
+        return 1672
+    else:
+        return val
+    
+    
+    
+def model_prep(df):
+    '''
+    This model takes a complete df resplits it using the same random state along with dropping columns,
+    aliasing columns, creating dummies and otherwise prepping the data for modeling
+    '''
+   
+    df = remove_outliers(df, 'age')
+    df = col_drop(df)
+    df.monthly_inc = np.where(df.monthly_inc >= 20000, df.monthly_inc/12, df.monthly_inc)
+    df.total_inc = np.where(df.total_inc == 0, df.monthly_inc * 12, df.total_inc)
+    df.monthly_inc = np.where(df.monthly_inc == 0, df.total_inc/12, df.monthly_inc)
+    df.total_inc = np.where(df.total_inc == 0, df.total_inc.mean(), df.total_inc)
+    df.monthly_inc = np.where(df.monthly_inc == 0, df.monthly_inc.mean(), df.monthly_inc)
+    df.prop_id = df.prop_id.apply(states)
+    df.rent = df.rent.apply(rent_change)
+    dummies = pd.get_dummies(df[['prop_id', 'Recommendation']])
+    df = pd.concat([df, dummies], axis = 1)
+    train, validate, test, X_train, y_train, X_val, y_val, X_test, y_test = train_vailidate_test_split(df, 'bad_resident','bad_resident')
+    train_scaled, val_scaled, test_scaled = scale_splits(X_train, X_val, X_test, StandardScaler(),
+                                                         columns = ['rent', 'monthly_inc',
+                                                                    'total_inc', 'age', 'risk_score'])
+    return y_train, y_val, y_test, train_scaled, val_scaled, test_scaled
 
 
 
