@@ -1,13 +1,7 @@
 import pandas as pd
-<<<<<<< HEAD
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
-=======
-import numpy as np 
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
->>>>>>> a7a992f20c3ab8e91822411b66d7048ece44a55b
 
 def get_cws_data(): 
     
@@ -50,6 +44,7 @@ def get_cws_data():
     df['bad_resident'] = np.where(df.bad_resident == True, 1, 0)
     
     df = df.drop_duplicates(subset = ['id', 'bad_resident'])
+    df = remove_outliers(df, 'age')
     
     #Filter by bad resident
     df_bad = df[df['bad_resident'] == 1]
