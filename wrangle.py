@@ -161,9 +161,9 @@ def remove_outliers(data, col):
     return filtered_df
 
 def col_drop(df):
-     df = df.drop(columns = ['id', 'total_charges', 'amount_paid', 'open', 'charge_code',
+    df = df.drop(columns = ['id', 'total_charges', 'amount_paid', 'open', 'charge_code',
                              'description', 'charge_name', 'sStatus', 'reason', 'GuarantorRequired'])
-
+    return df
         
 def rent_change(val):
     if val in [0, 100]:
@@ -190,6 +190,7 @@ def model_prep(df):
     df.rent = df.rent.apply(rent_change)
     dummies = pd.get_dummies(df[['prop_id', 'Recommendation']])
     df = pd.concat([df, dummies], axis = 1)
+    df = df.drop(columns = ['prop_id', 'Recommendation'])
     train, validate, test, X_train, y_train, X_val, y_val, X_test, y_test = train_vailidate_test_split(df, 'bad_resident','bad_resident')
     train_scaled, val_scaled, test_scaled = scale_splits(X_train, X_val, X_test, StandardScaler(),
                                                          columns = ['rent', 'monthly_inc',
