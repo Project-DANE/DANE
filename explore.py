@@ -159,7 +159,125 @@ def histplot_n(data, col, bad = False):
         plt.legend(labels= ['Bad Resident','Good resident'])
     
     return plt.show()
+   
     
+def bad_properties(train):
+    
+    cc = [96, 105, 106, 115, 127, 131, 137, 138,142, 148, 154,
+                155, 156, 163, 166, 169, 183, 189, 192, 229, 231, 233,
+                245, 246, 247, 248, 249,250, 251, 253, 268, 298]
+    
+    six= [298, 105, 155, 154, 156, 131]
+    
+    bad_properties= train[train['charge_code'].isin(cc)]
+    df3= bad_properties.groupby('prop_id')['charge_code'].count().nlargest(10)
+    df3= pd.DataFrame({'most_common': df3})
+    df3= df3.reset_index()
+    return df3    
+    
+def plot_bad_properties(train):
+    
+    df = bad_properties(train)
+    values = np.array(train.prop_id)
+    # clrs = ['grey' if (x < max(values)) else 'green' for x in values ]
+    fig = plt.figure()
+    bar = sns.barplot(data= df, x= 'prop_id', y= 'most_common', color = 'grey',  errwidth=0, ec= 'black')
+    patch_h = [patch.get_height() for patch in bar.patches]   
+    idx_tallest = np.argmax(patch_h)   
+    bar.patches[idx_tallest].set_facecolor('seagreen')
+    plt.xlabel('Property ID')
+    plt.ylabel('Charge Code Count')
+    plt.title('Properties With The Most Damage Codes')
+    for i in bar.containers:
+            bar.bar_label(i,)
+    
+    return plt.show()
 
- 
+
+
+def get_common(train):
+    
+    '''
+    This functions filters out the negative charge codes, then gets the top six of those codes.
+    It then returns a plot to show the results. 
+    '''
+    
+    # negative charge codes
+    cc = [96, 105, 106, 115, 127, 131, 137, 138,142, 148, 154,
+                155, 156, 163, 166, 169, 183, 189, 192, 229, 231, 233,
+                245, 246, 247, 248, 249,250, 251, 253, 268, 298]
+    
+    
+    # top six negative charge codes
+    six= [298, 105, 155, 154, 156, 131]
+    
+    # create new df using negative charge codes
+    bad_df= train[train['charge_code'].isin(cc)]
+    
+    # create new df using the top six negative charge codes
+    six_df= bad_df[bad_df['charge_code'].isin(six)]
+    
+    #plotting the results of the function
+    color= ['grey', 'grey', 'grey', 'grey', 'grey','red']
+    bar = sns.countplot(data= six_df , x= 'charge_code', color = 'grey', ec= 'black')
+    patch_h = [patch.get_height() for patch in bar.patches]   
+    idx_tallest = np.argmax(patch_h)   
+    bar.patches[idx_tallest].set_facecolor('seagreen')
+    plt.title('Most Common Charge Codes')
+    plt.xlabel('Charge')
+    plt.ylabel('Count')
+    for i in bar.containers:
+            bar.bar_label(i,)
+            
+    return plt.show()        
+    
+    
+def states(val):
+    '''
+    This funciton takes in a column of values and uses a previously established property key to 
+    convert each property id into the name of the state in which the property resides
+    '''
+    if val in range(53,116) or val in range(152,159) or val in [198,218,229,252,440,441,442,458]:
+        return 'Texas'
+    elif val in range(116,124) or val in [159, 444]:
+        return 'North Carolina'
+    elif val in range(125,131) or val in [164,183,212,213,217, 253]:
+        return 'Colorado'
+    elif val in range(142,147) or val in [216]:
+        return 'Arizona'
+    elif val == 131:
+        return 'California'
+    elif val in range(132,142) or val in [385,443,459]:
+        return 'Georgia'
+    elif val in [277,280]:
+        return 'Tennessee'
+    elif val in range(147,152) or val in [160,161,162,163]:
+        return 'Washington'    
+
+    
+def countplot_n(data, column, color, bad=False):
+    
+    if bad:
+        bad_resid = data[data.bad_resident == 1]
+        bar = sns.countplot(x=column, data=bad_resid, color=color, ec='black')
+        plt.title(f'NUMBER OF RESIDENTS BY {column.upper()} (BAD RESIDENTS)')
+        plt.xlabel(column.title())
+        plt.ylabel('Count')
+        for p in bar.patches:
+            height = p.get_height() / len(bad_resid) * 100
+            bar.annotate(f"{height:.2f}%", (p.get_x() + p.get_width() / 2,
+                                            p.get_height()), ha='center', va='center',
+                                            xytext=(0, 5), textcoords='offset points')
+        plt.show()
+    
+    else:
+        bar = sns.countplot(x=column, data=data, color=color, ec='black')
+        plt.title(f'NUMBER OF RESIDENTS BY {column.upper()}')
+        plt.xlabel(column.title())
+        plt.ylabel('Count')
+        for p in bar.patches:
+            height = p.get_height() / len(data) * 100
+            bar.annotate(f"{height:.2f}%", (p.get_x() + p.get_width() / 2, p.get_height()),
+                         ha='center', va='center', xytext=(0, 5), textcoords='offset points')
+        plt.show()
     
