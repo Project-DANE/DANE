@@ -9,8 +9,16 @@
 TBD.
 
 # Initial Questions
-
- TBD
+- 1. What is the average risk score?
+- 2. Is risk score an indicator of a damage?
+- 3. Is monthly/yearly income an indicator of a damage?
+- 4. Is requirement of a guarantor a good driver?
+- 5. Is there a relationship between rent and damages?
+- 6. Are certain age groups more likely to cause damage?
+- 7. Are short term renters more likely to cause damage?
+- 8. Do certain property has more damage?
+- 9. What is the most common damage code?
+- 10. Does Location Affect Bad Resident Status?
 
 
 # The Plan

@@ -193,9 +193,13 @@ def plot_bad_properties(train):
     
     return plt.show()
 
+<<<<<<< HEAD
 
 
 def get_common(train):
+=======
+ def get_common(df1):
+>>>>>>> c7cb30f8047b57e2e585732770d29d5d5c700dbe
     
     '''
     This functions filters out the negative charge codes, then gets the top six of those codes.
@@ -209,15 +213,25 @@ def get_common(train):
     
     
     # top six negative charge codes
+<<<<<<< HEAD
     six= [298, 105, 155, 154, 156, 131]
     
     # create new df using negative charge codes
     bad_df= train[train['charge_code'].isin(cc)]
+=======
+    six= [298, 155, 105, 154, 156, 131]
+    
+    order= [298, 105, 155, 154, 156, 131]
+    
+    # create new df using negative charge codes
+    bad_df= df1[df1['charge_code'].isin(cc)]
+>>>>>>> c7cb30f8047b57e2e585732770d29d5d5c700dbe
     
     # create new df using the top six negative charge codes
     six_df= bad_df[bad_df['charge_code'].isin(six)]
     
     #plotting the results of the function
+<<<<<<< HEAD
     color= ['grey', 'grey', 'grey', 'grey', 'grey','red']
     bar = sns.countplot(data= six_df , x= 'charge_code', color = 'grey', ec= 'black')
     patch_h = [patch.get_height() for patch in bar.patches]   
@@ -280,4 +294,74 @@ def countplot_n(data, column, color, bad=False):
             bar.annotate(f"{height:.2f}%", (p.get_x() + p.get_width() / 2, p.get_height()),
                          ha='center', va='center', xytext=(0, 5), textcoords='offset points')
         plt.show()
+=======
+    color= ['red', 'grey', 'grey', 'grey', 'grey', 'grey',]
+    ax = sns.countplot(
+                     data= six_df , x= 'charge_code', palette= color,
+                     order= order)
+    
+    # Set xlabel
+    plt.xlabel('Total Count')
+    
+    # Set ylabel
+    plt.ylabel('Charge Code')
+    
+    # Set plot title
+    plt.title('Total Charge Code Count')
+    
+    # set font scale
+    sns.set(font_scale= 5)
+    
+    # Show plot
+    plt.show()
+    
+    
+def bad_properties(train):
+    """
+    This function takes in the train dataset and returns the 10 properties with 
+    the highest number of charge codes
+    """
+    
+    # bad charge codes
+    cc = [96, 105, 106, 115, 127, 131, 137, 138,142, 148, 154,
+                155, 156, 163, 166, 169, 183, 189, 192, 229, 231, 233,
+                245, 246, 247, 248, 249,250, 251, 253, 268, 298]
+    
+    
+    six= [298, 105, 155, 154, 156, 131]
+    
+    # filter out the charge codes
+    bad_properties= train[train['charge_code'].isin(cc)]
+    
+    # return the properties with the most charge codes
+    df3= bad_properties.groupby('prop_id')['charge_code'].count().nlargest(10)
+    
+    # turn results into a dataframe
+    df3= pd.DataFrame({'most_common': df3})
+    
+    # reset index
+    df3= df3.reset_index()
+    return df3    
+
+
+def plot_bad_properties(df3):
+    '''
+    This function plots the results of the top 10 properties with the 
+    highest count of charge codes
+    '''
+    
+    # sets the graph color
+    color= ['red', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey']
+    fig = plt.figure()
+    # create the graphs in seaborn
+    ax= sns.barplot(data= df3, x= 'prop_id', y= 'most_common', palette= color, ec= 'black' , linewidth= 3.8)
+    sns.set(rc={'figure.figsize':(39.7,18.27)})
+    sns.set(font_scale= 4.5)
+    plt.xlabel('Property ID')
+    plt.ylabel('Charge Code Count')
+    plt.title('Properties With The Most Damage Codes')
+    for i in ax.containers:
+            ax.bar_label(i,)
+
+>>>>>>> c7cb30f8047b57e2e585732770d29d5d5c700dbe
     
