@@ -20,7 +20,7 @@ def vis_countplot(train, col = 'GuarantorRequired'):
     plt.show()
     
     
-def chi_test(train, col = 'GuarantorRequired'):
+def chi_test_d(train, col = 'GuarantorRequired'):
     '''takes in a column name and a dataframe and runs chi-square test to compare relationship of bad_resident 
     with a datframe attributes 
     '''
@@ -78,4 +78,24 @@ def viz_rent(train):
     sns.countplot(y=rent_bin_bad,data=train_bad_resident)
     sns.despine()
     plt.title('Relation of rent with Bad Resident')
+    
+    
+def chi_test(bins, train):
+    '''get result of chi-square for a feature to churn'''
+
+    observed = pd.crosstab(bins, train.bad_resident)
+    chi2, p, degf, expected = stats.chi2_contingency(observed)
+
+    #print(f'chi² = {chi2:.3f}')
+    #print(f'p = {p:.3}')
+    return chi2, p
+
+
+def countplot(data, column, color):
+    
+    sns.countplot(x = column, data = data, color = color, ec = 'black')
+    plt.title(f'NUMBER OF RESIDENTS BY {column.upper()}')
+    plt.xlabel(f'{column.capitalize()}')
+    plt.ylabel('Count')
+    plt.show()    
     
