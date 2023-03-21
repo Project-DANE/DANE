@@ -26,8 +26,8 @@ def get_cws_data():
                        'SNAME':'charge_name',
                        'cRent': 'rent',
                        'iTerm': 'term',
-                       'dIncome': 'monthly_inc',
-                       'TotalIncome': 'total_inc',
+                       'dIncome': 'monthly_income',
+                       'TotalIncome': 'total_income',
                        'AverageApplicantAge': 'age',
                        'AvgRiskScore':'risk_score',
                        'ReasonThatDroveDecisionDescription': 'reason'})
