@@ -1,5 +1,3 @@
-# imports
-
 import pandas as pd
 import numpy as np
 
@@ -15,9 +13,9 @@ def vis_countplot(train, col = 'GuarantorRequired'):
     #plot countplot graph
     sns.countplot(x=col, hue='bad_resident', data=train)
     sns.despine()
-    plt.title('Gurrantor Required relationship with Resident Type')
-    plt.xlabel('Gurrantor Required')
-    plt.legend(labels= ['Good Resident','Bad resident'])
+    plt.title('Guarantor Required relationship with Resident Type')
+    plt.xlabel('Guarantor Required')
+    plt.legend(labels= ['Good Resident','Bad Resident'])
     plt.show()
     
     
@@ -95,7 +93,7 @@ def chi_test(train, col = False, bins = False):
         binss = [0, 5, 10, 15, 20, 25, 30, 35, 40 , 45, 50, 55, 60, 65, 70, 75, 80]
         age_bin = pd.cut(train.age, bins= binss)
         
-        observed = pd.crosstab(age_bin, train.bad_resident)
+        observed = pd.crosstab(train.bad_resident, age_bin)
         chi2, p, degf, expected = stats.chi2_contingency(observed)
     else:
         
@@ -156,7 +154,7 @@ def histplot_n(data, col, bad = False):
         plt.title(f'{col.capitalize()} Causing The Most Damage')
         plt.xlabel(f'{col.capitalize()}')
     
-        plt.legend(labels= ['Bad Resident','Good resident'])
+        plt.legend(labels= ['Bad Resident','Good Resident'])
     
     return plt.show()
    
@@ -179,7 +177,6 @@ def plot_bad_properties(train):
     
     df = bad_properties(train)
     values = np.array(train.prop_id)
-    # clrs = ['grey' if (x < max(values)) else 'green' for x in values ]
     fig = plt.figure()
     bar = sns.barplot(data= df, x= 'prop_id', y= 'most_common', color = 'grey',  errwidth=0, ec= 'black')
     patch_h = [patch.get_height() for patch in bar.patches]   
@@ -218,7 +215,6 @@ def get_common(train):
     six_df= bad_df[bad_df['charge_code'].isin(six)]
     
     #plotting the results of the function
-    color= ['grey', 'grey', 'grey', 'grey', 'grey','red']
     bar = sns.countplot(data= six_df , x= 'charge_code', color = 'grey', ec= 'black')
     patch_h = [patch.get_height() for patch in bar.patches]   
     idx_tallest = np.argmax(patch_h)   
@@ -281,3 +277,71 @@ def countplot_n(data, column, color, bad=False):
                          ha='center', va='center', xytext=(0, 5), textcoords='offset points')
         plt.show()
     
+    
+def hist_data_inc(data, x_var, xlim=None, color = None):
+    
+    plt.figure(figsize=(10,6))
+    sns.histplot(data=data, x=x_var, color = color, edgecolor = 'black', linewidth = 1)
+    plt.xlim(xlim)
+    plt.title(f"{x_var.capitalize().split('_')[0]} {x_var.split('_')[1].capitalize()} Per Resident",
+              fontsize= 13)
+    plt.xlabel(f"{x_var.capitalize().split('_')[0]} {x_var.split('_')[1].capitalize()}", fontsize=12)
+    plt.ylabel('Count', fontsize=12)
+    return plt.show()
+    
+    
+def countplot_a(data, column, color, bad = False):
+    
+    
+    bins = [300,400,500,600,700,800,900]
+    if bad: 
+        risk_bin = pd.cut(data[column], bins = bins)
+        sns.countplot(x = risk_bin, hue = data.bad_resident,color = color, ec = 'black')
+        plt.title(f'''Number Of Residents By {column.capitalize().split('_')[0]} {column.split('_')[1].capitalize()}''',
+              fontsize= 13)
+        plt.xlabel(f"{column.capitalize().split('_')[0]} {column.split('_')[1].capitalize()}",
+                   fontsize= 12)
+        plt.ylabel('Count', fontsize= 12)
+        plt.legend(labels= ['Good Resident','Bad Resident'], loc = 'upper left')
+        plt.show()
+    
+    else:
+        bad_risk = pd.cut(data[data.bad_resident == 1].risk_score, bins = bins)
+        sns.countplot(x = bad_risk, color = color, ec = 'black', alpha = 1)
+        plt.title(f'''Number Of Residents By {column.capitalize().split('_')[0]} {column.split('_')[1].capitalize()}''',
+                  fontsize= 13)
+        plt.xlabel(f"{column.capitalize().split('_')[0]} {column.split('_')[1].capitalize()}",
+                   fontsize= 12)
+        plt.ylabel('Count', fontsize = 12)
+        plt.show()    
+        
+        
+def chi_test_a(data, column, risk = False):
+    '''get result of chi-square test'''
+    
+    
+    if risk: 
+        bins = [300,400,500,600,700,800,900]
+        risk_bin = pd.cut(data[column], bins = bins)
+
+        observed = pd.crosstab(data.bad_resident, risk_bin)
+        chi2, p, degf, expected = stats.chi2_contingency(observed)
+    
+    else:
+        
+        inc_bins = [0, 3000, 6000, 9000, 12000, 15000, 18000, 21000, 10000000]
+        month = pd.qcut(data[column], 4)
+    
+        observed = pd.crosstab(data.bad_resident, month)
+        chi2, p, degf, expected = stats.chi2_contingency(observed)
+    
+    𝜶 = .05
+
+    if p < 𝜶:
+        print("We reject the null hypothesis.")
+    else:
+        print("We fail to reject the null hypothesis.")
+    
+    return print(f'''
+Chi2 = {chi2:.3f}
+P-value = {p:.3f}''')    
