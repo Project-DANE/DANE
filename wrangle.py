@@ -181,11 +181,11 @@ def model_prep(df):
    
     df = remove_outliers(df, 'age')
     df = col_drop(df)
-    df.monthly_inc = np.where(df.monthly_inc >= 20000, df.monthly_inc/12, df.monthly_inc)
-    df.total_inc = np.where(df.total_inc == 0, df.monthly_inc * 12, df.total_inc)
-    df.monthly_inc = np.where(df.monthly_inc == 0, df.total_inc/12, df.monthly_inc)
-    df.total_inc = np.where(df.total_inc == 0, df.total_inc.mean(), df.total_inc)
-    df.monthly_inc = np.where(df.monthly_inc == 0, df.monthly_inc.mean(), df.monthly_inc)
+    df.monthly_income = np.where(df.monthly_income >= 20000, df.monthly_income/12, df.monthly_income)
+    df.total_income = np.where(df.total_income == 0, df.monthly_income * 12, df.total_income)
+    df.monthly_income = np.where(df.monthly_income == 0, df.total_income/12, df.monthly_income)
+    df.total_income = np.where(df.total_income == 0, df.total_income.mean(), df.total_income)
+    df.monthly_income = np.where(df.monthly_income == 0, df.monthly_income.mean(), df.monthly_income)
     df.prop_id = df.prop_id.apply(states)
     df.rent = df.rent.apply(rent_change)
     dummies = pd.get_dummies(df[['prop_id', 'Recommendation']])
@@ -193,8 +193,8 @@ def model_prep(df):
     df = df.drop(columns = ['prop_id', 'Recommendation'])
     train, validate, test, X_train, y_train, X_val, y_val, X_test, y_test = train_vailidate_test_split(df, 'bad_resident','bad_resident')
     train_scaled, val_scaled, test_scaled = scale_splits(X_train, X_val, X_test, StandardScaler(),
-                                                         columns = ['rent', 'monthly_inc',
-                                                                    'total_inc', 'age', 'risk_score'])
+                                                         columns = ['rent', 'monthly_income',
+                                                                    'total_income', 'age', 'risk_score'])
     return y_train, y_val, y_test, train_scaled, val_scaled, test_scaled
 
 
