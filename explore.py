@@ -85,9 +85,10 @@ def bad_properties(train):
 
 
 def plot_bad_properties(df3):
+    
     '''
-    This function plots the results of the top 10 properties with the 
-    highest count of charge codes
+    This function plots which property location has the highest count 
+    of charge codes
     '''
     
     # sets the graph color
