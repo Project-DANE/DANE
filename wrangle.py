@@ -195,7 +195,7 @@ def model_prep(df):
     train_scaled, val_scaled, test_scaled = scale_splits(X_train, X_val, X_test, StandardScaler(),
                                                          columns = ['rent', 'monthly_income',
                                                                     'total_income', 'age', 'risk_score'])
-    return y_train, y_val, y_test, train_scaled, val_scaled, test_scaled
+    return train, validate, test, y_train, y_val, y_test, train_scaled, val_scaled, test_scaled
 
 
 
