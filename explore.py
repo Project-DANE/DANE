@@ -1,5 +1,3 @@
-# imports
-
 import pandas as pd
 import numpy as np
 
@@ -12,12 +10,14 @@ import scipy.stats as stats
 def vis_countplot(train, col = 'GuarantorRequired'):
     ''' takes in a column name and a dataframe and show countplot graph'''
     
+    plt.figure(figsize = (10,6))
+    
     #plot countplot graph
-    sns.countplot(x=col, hue='bad_resident', data=train)
+    sns.countplot(x=col, hue='bad_resident', data=train, color = 'dodgerblue')
     sns.despine()
-    plt.title('Gurrantor Required relationship with Resident Type')
-    plt.xlabel('Gurrantor Required')
-    plt.legend(labels= ['Good Resident','Bad resident'])
+    plt.title('Guarantor Required relationship with Resident Type')
+    plt.xlabel('Guarantor Required')
+    plt.legend(labels= ['Good Resident','Bad Resident'])
     plt.show()
     
     
@@ -68,7 +68,7 @@ def viz_rent(train, col):
     
     plt.subplot(211)
     rent_bin = pd.cut(train[col], bins = bins)
-    sns.countplot(y=rent_bin,hue='bad_resident',data=train)
+    sns.countplot(y=rent_bin,hue='bad_resident',data=train, color = 'dodgerblue', edgecolor = 'black')
     sns.despine()
     plt.legend(loc='upper right', bbox_to_anchor=(1.2, 1))
     plt.title('Relation of rent with Resident')
@@ -79,7 +79,7 @@ def viz_rent(train, col):
     plt.subplot(212)
     train_bad_resident = train[train['bad_resident']==1]
     rent_bin_bad = pd.cut(train_bad_resident['rent'], bins = bins)
-    sns.countplot(y=rent_bin_bad,data=train_bad_resident, color = 'seagreen')
+    sns.countplot(y=rent_bin_bad,data=train_bad_resident, color = 'dodgerblue', edgecolor = 'black')
     sns.despine()
     plt.title('Relation of rent with Bad Resident')
     plt.xlabel('Count')
@@ -95,7 +95,7 @@ def chi_test(train, col = False, bins = False):
         binss = [0, 5, 10, 15, 20, 25, 30, 35, 40 , 45, 50, 55, 60, 65, 70, 75, 80]
         age_bin = pd.cut(train.age, bins= binss)
         
-        observed = pd.crosstab(age_bin, train.bad_resident)
+        observed = pd.crosstab(train.bad_resident, age_bin)
         chi2, p, degf, expected = stats.chi2_contingency(observed)
     else:
         
@@ -114,29 +114,33 @@ Chi2 = {chi2:.3f}
 P-value = {p:.3f}''')
 
 
+def countplot(data, column, color, bad=False):
+    plt.figure(figsize=(10, 6))
 
-def countplot(data, column, color, bad = False):
-    
-    
-    if bad: 
+    if bad:
         bad_resid = data[(data.bad_resident == 1)]
-        sns.countplot(x = column, data = bad_resid, color = color, ec = 'black')
-        plt.title(f'NUMBER OF RESIDENTS BY {column.upper()}')
-        plt.xlabel(f'{column.capitalize()}')
-        plt.ylabel('Count')
-        plt.show()
-    
+        sns.countplot(x=column, data=bad_resid, color=color, ec='black')
     else:
+        sns.countplot(x=column, data=data, color=color, ec='black')
+
+    plt.title(f'Number Of Residents By {column.capitalize()}')
+    plt.xlabel(f'{column.capitalize()}')
+    plt.ylabel('Count')
+
+    ax = plt.gca()
+    total = len(data)
+    for p in ax.patches:
+        height = p.get_height()
+        pct = height / total * 100
+        ax.text(p.get_x() + p.get_width() / 2, height, f'{pct:.1f}%', ha='center', va='bottom', rotation=30)
+
+    plt.subplots_adjust(top=1.3)
+    plt.show()
         
-        sns.countplot(x = column, data = data, color = color, ec = 'black')
-        plt.title(f'NUMBER OF RESIDENTS BY {column.upper()}')
-        plt.xlabel(f'{column.capitalize()}')
-        plt.ylabel('Count')
-        plt.show()
         
-    
 def histplot_n(data, col, bad = False):
     
+    plt.figure(figsize = (10,6))
     
     bins = [18, 20, 25, 30, 35, 40 , 45, 50, 55, 60, 65, 70, 75, 80]
     
@@ -144,22 +148,22 @@ def histplot_n(data, col, bad = False):
     
         bad_resid = data[(data.bad_resident == 1)]
     
-        sns.histplot(data= bad_resid, x= col, bins=bins, color = 'seagreen') 
+        sns.histplot(data= bad_resid, x= col, bins=bins, color = 'dodgerblue', edgecolor = 'black') 
         
         plt.title(f'{col.capitalize()} Causing The Most Damage')
         plt.xlabel(f'{col.capitalize()}')
     
     else:
         
-        sns.histplot(data= data, x= col, bins= bins, hue= "bad_resident", multiple="stack")
+        sns.histplot(data= data, x= col, bins= bins, edgecolor = 'black',
+                     hue= "bad_resident", palette = ['grey','dodgerblue'], multiple="stack")
     
         plt.title(f'{col.capitalize()} Causing The Most Damage')
         plt.xlabel(f'{col.capitalize()}')
     
-        plt.legend(labels= ['Bad Resident','Good resident'])
+        plt.legend(labels= ['Bad Resident','Good Resident'])
     
     return plt.show()
-   
     
 def bad_properties(train):
     
@@ -167,6 +171,7 @@ def bad_properties(train):
     This function returns a dataframe that only contains residents with
     negative charge codes.
     '''
+    plt.figure(figsize = (10,6))
     
     # negative charge codes
     cc = [96, 105, 106, 115, 127, 131, 137, 138,142, 148, 154,
@@ -199,14 +204,13 @@ def plot_bad_properties(train):
     This function returns a visual of the states with the highest
     amount of charge codes.
     '''
-    
     # setting the palette order 
-    cl= ['red', 'grey', 'grey', 'grey', 'grey']
+    cl= ['#E50000', 'grey', 'grey', 'grey', 'grey']
     
     # returing the resulting dataframe from the `bad_properties` function
     df = bad_properties(train)
     values = np.array(train.prop_id)
-    fig = plt.figure()
+    plt.figure(figsize = (10,6))
     
     # creating the graph
     bar = sns.barplot(data= df, x= 'prop_id', y= 'most_common', palette= cl,  errwidth=0, ec= 'black')
@@ -214,7 +218,7 @@ def plot_bad_properties(train):
     idx_tallest = np.argmax(patch_h)   
     
     # setting the xlabel
-    plt.xlabel('Property ID')
+    plt.xlabel('Property Location')
     
     # setting the ylabel
     plt.ylabel('Charge Code Count')
@@ -224,10 +228,10 @@ def plot_bad_properties(train):
     
     # adding the total count number on the top of the bars
     for i in bar.containers:
-            bar.bar_label(i,)
+            bar.bar_label(i)
     
     # returning the graph
-    return plt.show()
+    plt.show()
             
 
 def get_common(train):
@@ -236,7 +240,7 @@ def get_common(train):
     This functions filters out the negative charge codes, then gets the top six of those codes.
     It then returns a plot to show the results. 
     '''
-    
+    plt.figure(figsize = (10,6))
     # negative charge codes
     cc = [96, 105, 106, 115, 127, 131, 137, 138,142, 148, 154,
                 155, 156, 163, 166, 169, 183, 189, 192, 229, 231, 233,
@@ -253,11 +257,10 @@ def get_common(train):
     six_df= bad_df[bad_df['charge_code'].isin(six)]
     
     #plotting the results of the function
-    color= ['grey', 'grey', 'grey', 'grey', 'grey','red']
     bar = sns.countplot(data= six_df , x= 'charge_code', color = 'grey', ec= 'black')
     patch_h = [patch.get_height() for patch in bar.patches]   
     idx_tallest = np.argmax(patch_h)   
-    bar.patches[idx_tallest].set_facecolor('seagreen')
+    bar.patches[idx_tallest].set_facecolor('#E50000')
     plt.title('Most Common Charge Codes')
     plt.xlabel('Charge')
     plt.ylabel('Count')
@@ -296,9 +299,10 @@ def risk_score(train):
     This function shows how many bad residetns are in each range of risk
     score.
     """
+    plt.figure(figsize = (10,6))
     one= 1
     # set the color palette order
-    color= ['grey', 'grey', 'grey', 'red', 'red']
+    color= ['grey', 'grey', 'grey', '#E50000', '#E50000']
     
     # set the font scale
     sns.set(font_scale= one)
@@ -334,8 +338,8 @@ def countplot_n(data, column, bad=False):
     This function retruns the percentage of bad residents 
     per lease term length.
     """
-    
-    color= ['grey', 'grey', 'grey', 'grey', 'red', 'red', 'grey', 'red', 'grey', 'grey']
+    plt.figure(figsize = (10,6))
+    color= ['grey', 'grey', 'grey', 'grey', '#E50000', '#E50000', 'grey', '#E50000', 'grey', 'grey']
     
      # set the font scale
     sns.set(font_scale= 1)
@@ -366,3 +370,71 @@ def countplot_n(data, column, bad=False):
         plt.show()
     
     
+def hist_data_inc(data, x_var, xlim=None, color = None):
+    
+    sns.set_style("white")
+    plt.figure(figsize=(10,6))
+    sns.histplot(data=data, x=x_var, color = color, edgecolor = 'black', linewidth = 1)
+    plt.xlim(xlim)
+    plt.title(f"{x_var.capitalize().split('_')[0]} {x_var.split('_')[1].capitalize()} Per Resident",
+              fontsize= 13)
+    plt.xlabel(f"{x_var.capitalize().split('_')[0]} {x_var.split('_')[1].capitalize()}", fontsize=12)
+    plt.ylabel('Count', fontsize=12)
+    return plt.show()
+    
+    
+def countplot_a(data, column, color, bad = False):
+    
+    plt.figure(figsize = (10,6))
+    bins = [300,400,500,600,700,800,900]
+    if bad: 
+        risk_bin = pd.cut(data[column], bins = bins)
+        sns.countplot(x = risk_bin, hue = data.bad_resident,color = color, ec = 'black')
+        plt.title(f'''Number Of Residents By {column.capitalize().split('_')[0]} {column.split('_')[1].capitalize()}''',
+              fontsize= 13)
+        plt.xlabel(f"{column.capitalize().split('_')[0]} {column.split('_')[1].capitalize()}",
+                   fontsize= 12)
+        plt.ylabel('Count', fontsize= 12)
+        plt.legend(labels= ['Good Resident','Bad Resident'], loc = 'upper left')
+        plt.show()
+    
+    else:
+        bad_risk = pd.cut(data[data.bad_resident == 1].risk_score, bins = bins)
+        sns.countplot(x = bad_risk, color = color, ec = 'black', alpha = 1)
+        plt.title(f'''Number Of Residents By {column.capitalize().split('_')[0]} {column.split('_')[1].capitalize()}''',
+                  fontsize= 13)
+        plt.xlabel(f"{column.capitalize().split('_')[0]} {column.split('_')[1].capitalize()}",
+                   fontsize= 12)
+        plt.ylabel('Count', fontsize = 12)
+        plt.show()    
+        
+        
+def chi_test_a(data, column, risk = False):
+    '''get result of chi-square test'''
+    
+    
+    if risk: 
+        bins = [300,400,500,600,700,800,900]
+        risk_bin = pd.cut(data[column], bins = bins)
+
+        observed = pd.crosstab(data.bad_resident, risk_bin)
+        chi2, p, degf, expected = stats.chi2_contingency(observed)
+    
+    else:
+        
+        inc_bins = [0, 3000, 6000, 9000, 12000, 15000, 18000, 21000, 10000000]
+        month = pd.qcut(data[column], 4)
+    
+        observed = pd.crosstab(data.bad_resident, month)
+        chi2, p, degf, expected = stats.chi2_contingency(observed)
+    
+    𝜶 = .05
+
+    if p < 𝜶:
+        print("We reject the null hypothesis.")
+    else:
+        print("We fail to reject the null hypothesis.")
+    
+    return print(f'''
+Chi2 = {chi2:.3f}
+P-value = {p:.3f}''')    
