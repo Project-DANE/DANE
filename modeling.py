@@ -318,6 +318,7 @@ def comparing_models(train, train_scaled, y_train, val_scaled, y_val):
 
 def models(df):
     plt.figure(figsize=(12, 8))
+    sns.set_style('white')
     cl = ['grey', 'green']
 
     ax = sns.barplot(x='Model', y='value', hue='variable', 
@@ -327,12 +328,64 @@ def models(df):
     ax.set_title('Train and Validation Recall by Model', fontsize=20)
     ax.set_xlabel('Model', fontsize=14)
     ax.set_ylabel('Recall', fontsize=14)
-    ax.legend(fontsize=12)
+    ax.legend(fontsize=12, bbox_to_anchor=(1.02, 1), loc='upper left')
     plt.xticks(rotation=45, ha='right', fontsize=12)
     plt.yticks(fontsize=12)
+    plt.annotate('Best Model', xy=(4, .7),xytext=(3.75,.85),color='black',arrowprops = dict(facecolor ='black',
+                                  shrink = 0.05))
     for p in ax.containers:
         ax.bar_label(p, label_type='edge', labels=[f"{int(height*100)}%" for height in p.datavalues])
 
     plt.legend(loc = 'best')
     
     return plt.show()
+
+def best_model(train, y_train, x, y, x1, y1):
+    ez = EasyEnsembleClassifier(n_estimators = 10, sampling_strategy = .5, random_state = 91)
+    ez = ez.fit(train, y_train)
+    y_pred = ez.predict(x)
+    
+    train_pred = ez.predict(train)
+    y_preds = ez.predict(x1)
+    
+    class_report_train = classification_report(y_train, train_pred)
+    class_report_val = classification_report(y, y_pred)
+    class_report_test = classification_report(y1, y_preds)
+    
+    # Extract the recall for each class
+    recall_train = pd.Series(class_report_train.split()[11], name='train_ensemble')
+    recall_validate = pd.Series(class_report_val.split()[11], name='validate_ensemble')
+    recall_test = pd.Series(class_report_test.split()[11], name = 'test_ensemble')
+    
+    df = pd.concat([recall_train, recall_validate, recall_test], axis=1)
+    df = pd.DataFrame(df, columns= ['train_ensemble', 'validate_ensemble', 'test_ensemble'])
+
+    return df
+
+
+def best_model_bc():
+    df = pd.DataFrame({'model': 'ensemble', 'train': [0.66], 'validate': [0.63], 'test': [0.55]})
+    df.index = ['']
+
+    # Reshape dataframe
+    df = pd.melt(df.reset_index(), id_vars=['index'], value_vars=['train', 'validate', 'test'])
+    df.columns = ['index', 'variable', 'value']
+
+    cl = ['tomato', 'lightskyblue', 'limegreen']
+
+    sns.set_style("white")
+    plt.figure(figsize=(10,6))
+    plt.subplots_adjust(top = 1.3)
+    ax = sns.barplot(x='index', y='value', hue='variable', data=df, linewidth=2,
+                     ec = 'black', palette= cl, alpha = .7)
+    plt.title('Recall By Data Subset', fontsize=18)
+    plt.xlabel('Ensemble Model', fontsize=14)
+    plt.ylabel('Recall', fontsize=14)
+    plt.legend(fontsize=12)
+    plt.xticks(fontsize=12)
+    plt.yticks(fontsize=12)
+    for p in ax.containers:
+            ax.bar_label(p, label_type='edge',
+                         labels=[f"{int(height*100)}%" for height in p.datavalues], fontsize = 15)
+
+    plt.show()
