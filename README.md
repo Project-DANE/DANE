@@ -9,15 +9,15 @@ The goal of this project is to create a secondary screening model that will dete
 To acomplish our goals first we will aquire the data from CWS containing information on just over 5000 residents across 97 different properties from the year 2018 until this year. Then we will begin selecting a feature set from this data to use in our exploration. After selecting the best features and analyzing the data in our explore phase, we will then prepare the data for modeling. Since there is a heavy class imbalence we will use imblearn to change the sampling ratio to better train our models. After finding the best model and running it through the test set, we will then conclude with takeaways from the model and the data as well as some recommendations moving forward for CWS and what we believe to be the best application for our model.
 
 # Initial Questions
-- 1. What is the average risk score?
-- 2. Is risk score an indicator of loss?
-- 3. Is monthly/yearly income an indicator of loss?
-- 4. Is requirement of a guarantor a good driver?
-- 5. Is there a relationship between rent and damages?
-- 6. Are certain age groups more likely to cause damage?
-- 7. Are short term renters more likely to cause damage?
-- 8. Do certain property has more damage?
-- 9. What is the most common damage code?
+1. What is the average risk score?
+2. Is risk score an indicator of loss?
+3. Is monthly/yearly income an indicator of loss?
+4. Is requirement of a guarantor a good driver?
+5. Is there a relationship between rent and damages?
+6. Are certain age groups more likely to cause damage?
+7. Are short term renters more likely to cause damage?
+8. Do certain property has more damage?
+9. What is the most common damage code?
 
 
 # The Plan
