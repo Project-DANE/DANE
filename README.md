@@ -10,15 +10,14 @@ To acomplish our goals first we will aquire the data from CWS containing informa
 
 # Initial Questions
 - 1. What is the average risk score?
-- 2. Is risk score an indicator of a damage?
-- 3. Is monthly/yearly income an indicator of a damage?
+- 2. Is risk score an indicator of loss?
+- 3. Is monthly/yearly income an indicator of loss?
 - 4. Is requirement of a guarantor a good driver?
 - 5. Is there a relationship between rent and damages?
 - 6. Are certain age groups more likely to cause damage?
 - 7. Are short term renters more likely to cause damage?
 - 8. Do certain property has more damage?
 - 9. What is the most common damage code?
-- 10. Does Location Affect Bad Resident Status?
 
 
 # The Plan
@@ -69,9 +68,9 @@ To acomplish our goals first we will aquire the data from CWS containing informa
 | sStatus | Status of a tenant (current or past) |
 | rent | Rent per month |
 | term | Lease contract in months |  
-| monthly_inc | Monthly income of a tenant |
+| monthly_income | Monthly income of a tenant |
 | GuarantorRequired | If a tenant requires a guarrantor |
-| total_inc | Yearly income of a tenant |
+| total_income | Yearly income of a tenant |
 | Recommendation | Acceptance status of applicant |
 | age | Age of a tenant |
 | risk_score | Predetermined score of how risky an applicant is at the time of applying |
@@ -86,9 +85,10 @@ To acomplish our goals first we will aquire the data from CWS containing informa
 - Put the data in a file containing the cloned repo.
 - Run notebook.
 (An important note: We do not expect this project to be possible to reproduce since the data was aquired from a private company)
+
 ## Conclusions
 
-**TBD**
+**TBD **
 
 
  
@@ -98,8 +98,10 @@ To acomplish our goals first we will aquire the data from CWS containing informa
 - We also managed to maintain over 50% recall at an acceptable loss of precision
 
 ## Recommendations
-- TBD
+- We would recommend to use our model as a way to screen applicants to minimize damage or loss to the company. It's important to note that this screening would be a secondary screening process and not the primary one. We made our model in an efficient way to cooperate with the intital screening process.
+- We would also recommend looking into Georgia's properties and findning why this state tends to have more damage/loss charges.
 
 ## Next Steps
 
-- TBD
+- Pull more data from the SQL server to find more correlations and patterns to improve our model
+- Understand more of the primary application process
