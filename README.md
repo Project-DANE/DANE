@@ -88,8 +88,13 @@ To acomplish our goals first we will aquire the data from CWS containing informa
 
 ## Conclusions
 
-**TBD **
-
+- Only around 3% of residents are classified as 'bad residents' so the screen in use right now is effective
+- The Atlanta area had the highest concentration of bad residents
+- While we determined that income level is relevant to finding 'bad residents' we found an slightly inversed relationship
+- Requiring a Guarantor does not have an impact on being classified as a 'bad resident'
+- Longer term rental contracts resulted in higher rates of 'bad residents' however this is not unexpected as the longer someone is there the more likely they are to eventually cause some sort of damage or loss
+- Most of the residents who were classified as 'bad residents' fell within the rent range of $1400-$1800 USD
+- The model we have developed should be used as a suppliment to the already in use model
 
  
 **Best Model's performance**
