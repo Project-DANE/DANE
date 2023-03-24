@@ -205,7 +205,7 @@ def plot_bad_properties(train):
     amount of charge codes.
     '''
     # setting the palette order 
-    cl= ['#E50000', 'grey', 'grey', 'grey', 'grey']
+    cl= ['#E50000', '#cccccc', '#cccccc', '#cccccc', '#cccccc']
     
     # returing the resulting dataframe from the `bad_properties` function
     df = bad_properties(train)
@@ -213,7 +213,7 @@ def plot_bad_properties(train):
     plt.figure(figsize = (10,6))
     
     # creating the graph
-    bar = sns.barplot(data= df, x= 'prop_id', y= 'most_common', palette= cl,  errwidth=0, ec= 'black')
+    bar = sns.barplot(data= df, x= 'prop_id', y= 'most_common', palette= cl,  errwidth=0)
     patch_h = [patch.get_height() for patch in bar.patches]   
     idx_tallest = np.argmax(patch_h)   
     
@@ -257,7 +257,7 @@ def get_common(train):
     six_df= bad_df[bad_df['charge_code'].isin(six)]
     
     #plotting the results of the function
-    bar = sns.countplot(data= six_df , x= 'charge_code', color = 'grey', ec= 'black')
+    bar = sns.countplot(data= six_df , x= 'charge_code', color = '#cccccc')
     patch_h = [patch.get_height() for patch in bar.patches]   
     idx_tallest = np.argmax(patch_h)   
     bar.patches[idx_tallest].set_facecolor('#E50000')
@@ -302,7 +302,8 @@ def risk_score(train):
     plt.figure(figsize = (10,6))
     one= 1
     # set the color palette order
-    color= ['grey', 'grey', 'grey', '#E50000', '#E50000']
+    color= ['#cccccc', '#cccccc', '#cccccc', '#E50000', '#E50000']
+    
     
     # set the font scale
     sns.set(font_scale= one)
@@ -332,6 +333,8 @@ def risk_score(train):
             ax.bar_label(i,)
     return plt.show()
 
+
+    
 def countplot_n(data, column, bad=False):
     
     """
@@ -339,21 +342,27 @@ def countplot_n(data, column, bad=False):
     per lease term length.
     """
     plt.figure(figsize = (10,6))
-    color= ['grey', 'grey', 'grey', 'grey', '#E50000', '#E50000', 'grey', '#E50000', 'grey', 'grey']
+    color = ['#cccccc', '#cccccc', '#cccccc', '#cccccc', '#E50000', '#E50000', '#cccccc',
+                     '#E50000', '#cccccc', '#cccccc']
     
      # set the font scale
     sns.set(font_scale= 1)
     
+    sns.set_style('ticks')
+    
     # if statement for which graph will be returned 
     if bad:
         bad_resid = data[data.bad_resident == 1]
-        bar= sns.countplot(x= column, data=bad_resid, palette= color, ec='black')
+        bar= sns.countplot(x= column, data=bad_resid, palette= color)
         plt.title(f'Number of Bad Residents by {column.capitalize()}')
         plt.xlabel(f'{column.capitalize()} Length')
         plt.ylabel('Total Count')
+        bar = plt.gca()
+        bar.set_facecolor('white')
+        
         for p in bar.patches:
             height= p.get_height() / len(bad_resid) * 100
-            bar.annotate(f"{height:.2f}%", (p.get_x() + p.get_width() / 2,
+            bar.annotate(f"{round(height)}%", (p.get_x() + p.get_width() / 2,
                                             p.get_height()), ha='center', va='center',
                                             xytext=(0, 5), textcoords='offset points')
         plt.show()
@@ -363,9 +372,12 @@ def countplot_n(data, column, bad=False):
         plt.title(f'Number of Bad Residents by {column.capitalize()}')
         plt.xlabel(f'{column.capitalize()} Length')
         plt.ylabel('Total Count')
+        bar = plt.gca()
+        bar.set_facecolor('white')
+
         for p in bar.patches:
             height = p.get_height() / len(data) * 100
-            bar.annotate(f"{height:.2f}%", (p.get_x() + p.get_width() / 2, p.get_height()),
+            bar.annotate(f"{round(height)}%", (p.get_x() + p.get_width() / 2, p.get_height()),
                          ha= 'center', va= 'center', xytext= (0, 5), textcoords= 'offset points')
         plt.show()
     

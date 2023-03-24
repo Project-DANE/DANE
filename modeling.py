@@ -319,7 +319,7 @@ def comparing_models(train, train_scaled, y_train, val_scaled, y_val):
 def models(df):
     plt.figure(figsize=(12, 8))
     sns.set_style('white')
-    cl = ['grey', 'green']
+    cl = ['#cccccc', 'green']
 
     ax = sns.barplot(x='Model', y='value', hue='variable', 
                      data=pd.melt(df, id_vars=['Model'],
@@ -331,7 +331,7 @@ def models(df):
     ax.legend(fontsize=12, bbox_to_anchor=(1.02, 1), loc='upper left')
     plt.xticks(rotation=45, ha='right', fontsize=12)
     plt.yticks(fontsize=12)
-    plt.annotate('Best Model', xy=(4, .7),xytext=(3.75,.85),color='black',arrowprops = dict(facecolor ='black',
+    plt.annotate('Best Model', xy=(2, .7),xytext=(1.75,.85),color='black',arrowprops = dict(facecolor ='black',
                                   shrink = 0.05))
     for p in ax.containers:
         ax.bar_label(p, label_type='edge', labels=[f"{int(height*100)}%" for height in p.datavalues])
@@ -371,7 +371,7 @@ def best_model_bc():
     df = pd.melt(df.reset_index(), id_vars=['index'], value_vars=['train', 'validate', 'test'])
     df.columns = ['index', 'variable', 'value']
 
-    cl = ['tomato', 'lightskyblue', 'limegreen']
+    cl = ['#C9E4CA', '#6BBBA1', '#0C5449']
 
     sns.set_style("white")
     plt.figure(figsize=(10,6))
