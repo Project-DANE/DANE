@@ -450,3 +450,52 @@ def chi_test_a(data, column, risk = False):
     return print(f'''
 Chi2 = {chi2:.3f}
 P-value = {p:.3f}''')    
+
+
+def plot_bad_propertiess(train):
+    
+    '''
+    This function returns a visual of the states with the highest
+    amount of charge codes.
+    '''
+    # Define a list of properties
+    properties = ['Colorado', 'Texas', 'Georgia', 'Arizona', 'North Carolina']
+
+    # Initialize an empty list to store the results
+    results = []
+
+    # Loop over each property and calculate the CO variable
+    for prop in properties:
+        CO = (round(len(train[(train.prop_id == prop) & (train.bad_resident == 1)])/ len(train[train.prop_id == prop]),
+                   2) * 100)
+        results.append(CO)
+    
+    # Sort the results in reverse order
+    properties_sorted = [x for _, x in sorted(zip(results, properties), reverse=True)]
+    results_sorted = sorted(results, reverse=True)
+
+    # Create a pandas DataFrame with the results
+    df = pd.DataFrame(data = {'Properties': properties_sorted, 'CO': results_sorted})
+    
+    # Setting the palette order 
+    cl= ['#E50000', '#cccccc', '#cccccc', '#cccccc', '#cccccc']
+    
+    plt.figure(figsize = (10,6))
+    
+    # Creating the graph
+    bar = sns.barplot(data=df, x='Properties', y='CO', palette=cl, order=properties_sorted)
+    patch_h = [patch.get_height() for patch in bar.patches]   
+    idx_tallest = np.argmax(patch_h)   
+    
+    # Setting the title
+    plt.title('Properties With The Most Damage Codes')
+    
+    
+    # Adding the total count number on the top of the bars
+    for p in bar.patches:
+        bar.annotate(f"{round(p.get_height())}%", (p.get_x() + p.get_width() / 2., p.get_height()), 
+                     ha='center', va='center', xytext=(0, 5), textcoords='offset points')
+
+    # Returning the graph
+    plt.show()
+    

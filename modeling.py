@@ -328,17 +328,18 @@ def models(df):
     ax.set_title('Train and Validation Recall by Model', fontsize=20)
     ax.set_xlabel('Model', fontsize=14)
     ax.set_ylabel('Recall', fontsize=14)
-    ax.legend(fontsize=12, bbox_to_anchor=(1.02, 1), loc='upper left')
+    ax.legend(fontsize=14, bbox_to_anchor=(1.02, 1), loc='upper left')
     plt.xticks(rotation=45, ha='right', fontsize=12)
     plt.yticks(fontsize=12)
-    plt.annotate('Best Model', xy=(2, .7),xytext=(1.75,.85),color='black',arrowprops = dict(facecolor ='black',
-                                  shrink = 0.05))
+    ax.set_ylim(0, ax.get_ylim()[1]*1.1)
+    plt.annotate('Best Model', xy=(2, .7),xytext=(1.75,.85),color='black', fontsize = 20, arrowprops = dict(facecolor ='black', shrink = 0.05))
     for p in ax.containers:
-        ax.bar_label(p, label_type='edge', labels=[f"{int(height*100)}%" for height in p.datavalues])
+        ax.bar_label(p, label_type='edge', labels=[f"{int(height*100)}%" for height in p.datavalues], fontsize = 20)
 
     plt.legend(loc = 'best')
     
     return plt.show()
+
 
 def best_model(train, y_train, x, y, x1, y1):
     ez = EasyEnsembleClassifier(n_estimators = 10, sampling_strategy = .5, random_state = 91)
@@ -389,3 +390,4 @@ def best_model_bc():
                          labels=[f"{int(height*100)}%" for height in p.datavalues], fontsize = 15)
 
     plt.show()
+    
