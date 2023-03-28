@@ -60,7 +60,7 @@ def chi_test_g(train, col = 'GuarantorRequired'):
         
 
 def viz_rent(train):
-    '''plot histogram'''
+    '''Plot precentage of bad resident within rent range'''
 
     r1 = (len(train[(train.rent >= 1300) & (train.rent < 1401) & (train.bad_resident == 1)]) /len(train[(train.rent >1300) & (train.rent < 1401)]))
     r2 = (len(train[(train.rent > 1400) & (train.rent < 1501) & (train.bad_resident == 1)]) /len(train[(train.rent > 1400) & (train.rent < 1501)]))
@@ -426,7 +426,40 @@ def countplot_a(data, column, color, bad = False):
         plt.xlabel(f"{column.capitalize().split('_')[0]} {column.split('_')[1].capitalize()}",
                    fontsize= 12)
         plt.ylabel('Count', fontsize = 12)
-        plt.show()    
+        plt.show()  
+        
+def viz_bad_resident_risk(train):
+    
+    '''Plot precentage of bad resident within risk score'''
+    
+    r1 = len(train[(train.risk_score < 301) & (train.bad_resident == 1)]) / len(train.risk_score[train.risk_score < 301])
+    r2 = len(train[(train.risk_score >300) & (train.risk_score < 401) & (train.bad_resident == 1)]) / len(train[(train.risk_score >300) & (train.risk_score < 401)])
+    r3 = (len(train[(train.risk_score >400) & (train.risk_score < 501) & (train.bad_resident == 1)]) /
+    len(train[(train.risk_score >400) & (train.risk_score < 501)]))
+    r4 = (len(train[(train.risk_score >500) & (train.risk_score < 601) & (train.bad_resident == 1)]) /
+    len(train[(train.risk_score >500) & (train.risk_score < 601)]))
+    r5 = (len(train[(train.risk_score >600) & (train.risk_score < 701) & (train.bad_resident == 1)]) /
+    len(train[(train.risk_score >600) & (train.risk_score < 701)]))
+    r6= (len(train[(train.risk_score >700) & (train.risk_score < 801) & (train.bad_resident == 1)]) /
+    len(train[(train.risk_score >700) & (train.risk_score < 801)]))
+    r7 = (len(train[(train.risk_score >800) & (train.risk_score < 100000000) & (train.bad_resident == 1)]) /
+    len(train[(train.risk_score >800) & (train.risk_score < 100000000)]))
+    rs = pd.DataFrame(data = {'0-300': r1, '400-500': r3, '500-600': r4,
+                         '600-700': r5, '700-800': r6, '>800':r7}, index = [0])
+    rs = rs.round(2) * 100
+    
+    sns.set_style("white")
+    color= ['#CCCCCC', 'red', '#CCCCCC', '#CCCCCC', '#CCCCCC']
+    bar= sns.barplot(data= rs, palette= color, edgecolor=['#CCCCCC', 'black', '#CCCCCC','#CCCCCC', '#CCCCCC'])
+    plt.xlabel('Risk Score Range')
+    plt.ylabel('Percent')
+    plt.title('Relationship Between Risk Score And "Bad Resident"?')
+    bar.set_xticklabels(bar.get_xticklabels(), rotation= 50)
+    for p in bar.patches:
+            bar.annotate(f"{round(p.get_height())}%", (p.get_x() + p.get_width() / 2., p.get_height()),
+                         ha='center', va='center', xytext=(0, 5), textcoords='offset points', fontsize= 13)
+    plt.show()
+
         
         
 def chi_test_a(data, column, risk = False):
@@ -457,7 +490,47 @@ def chi_test_a(data, column, risk = False):
     
     return print(f'''
 Chi2 = {chi2:.3f}
-P-value = {p:.3f}''')    
+P-value = {p:.3f}''')   
+
+def viz_bad_resident_term(train):
+    '''Plot precentage of bad resident within term'''
+
+    [2,4,6,11,12,13,14,15,16,17,18]
+    t1 = len(train[(train.term == 2) & (train.bad_resident == 1)])/ len(train[train.term == 2])
+    t2 = len(train[(train.term == 4) & (train.bad_resident == 1)])/ len(train[train.term == 4])
+    t3 = len(train[(train.term == 6) & (train.bad_resident == 1)])/ len(train[train.term == 6])
+    t4 = len(train[(train.term == 11) & (train.bad_resident == 1)])/ len(train[train.term == 11])
+    t5 = len(train[(train.term == 12) & (train.bad_resident == 1)])/ len(train[train.term == 12])
+    t6 = len(train[(train.term == 13) & (train.bad_resident == 1)])/ len(train[train.term == 13])
+    t7 = len(train[(train.term == 14) & (train.bad_resident == 1)])/ len(train[train.term == 14])
+    t8 = len(train[(train.term == 15) & (train.bad_resident == 1)])/ len(train[train.term == 15])
+    t9 = len(train[(train.term == 16) & (train.bad_resident == 1)])/ len(train[train.term == 16])
+    t10 = len(train[(train.term == 17) & (train.bad_resident == 1)])/ len(train[train.term == 17])
+    t11 = len(train[(train.term == 18) & (train.bad_resident == 1)])/ len(train[train.term == 18])
+    term = pd.DataFrame(data = {'1': t1, '4': t2, '6': t3, '11':t4, '12':t5, '13':t6, '14':t7,
+                               '15':t8, '16':t9, '17':t10, '18':t11}, index = [0])
+    term = term.round(2) * 100
+     
+    plt.figure(figsize = (10,6))
+    color = ['#E50000', '#CCCCCC', '#CCCCCC', '#CCCCCC', '#CCCCCC', '#CCCCCC', '#CCCCCC',
+                         '#CCCCCC', '#CCCCCC', '#CCCCCC', '#CCCCCC']
+    # set the font scale
+    sns.set(font_scale= 1)
+    sns.set_style('ticks')
+    bar= sns.barplot(data=term, palette= color, edgecolor= ['black', '#CCCCCC', '#CCCCCC', '#CCCCCC', '#CCCCCC',
+                    '#CCCCCC', '#CCCCCC', '#CCCCCC', '#CCCCCC', '#CCCCCC', '#CCCCCC', '#CCCCCC', '#CCCCCC'])
+    plt.title(f'Number of Bad Residents by Term')
+    plt.xlabel(f'Term in Months')
+    plt.ylabel('Total Count')
+    bar = plt.gca()
+    bar.set_facecolor('white')
+    
+    for p in bar.patches:
+            height= p.get_height() / len(term) * 1
+            bar.annotate(f"{round(height)}%",(p.get_x() + p.get_width() / 2,
+                                                 p.get_height()), ha='center', va='center',
+                                                 xytext=(0, 5), textcoords='offset points')
+    plt.show()
 
 
 def plot_bad_propertiess(train):
