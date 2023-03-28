@@ -87,7 +87,7 @@ def viz_rent(train):
             ax.annotate(f"{round(p.get_height())}%", (p.get_x() + p.get_width() / 2., p.get_height()),
                          ha='center', va='center', xytext=(0, 5), textcoords='offset points', fontsize= 13)
 
-    plt.title('Relation of Rent with Resident',fontsize=14)
+    plt.title('Relation of Rent with Bad Resident',fontsize=14)
     ax.set_xlabel('Rent Range', fontsize=12)
     ax.set_ylabel('Percent', fontsize=12)
     plt.ylim(0,7)
