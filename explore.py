@@ -59,32 +59,40 @@ def chi_test_g(train, col = 'GuarantorRequired'):
         print(f'There appears to be no significant relationship between {col} and bad_resident.')
         
 
-def viz_rent(train, col):
+def viz_rent(train):
     '''plot histogram'''
-    
-    bins = [1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000,2100,2200,2300,2400,2500, 2600]
-    
-    plt.figure(figsize=(8, 16))
-    
-    plt.subplot(211)
-    rent_bin = pd.cut(train[col], bins = bins)
-    sns.countplot(y=rent_bin,hue='bad_resident',data=train, color = 'dodgerblue', edgecolor = 'black')
+
+    r1 = (len(train[(train.rent >= 1300) & (train.rent < 1401) & (train.bad_resident == 1)]) /len(train[(train.rent >1300) & (train.rent < 1401)]))
+    r2 = (len(train[(train.rent > 1400) & (train.rent < 1501) & (train.bad_resident == 1)]) /len(train[(train.rent > 1400) & (train.rent < 1501)]))
+    r3 = (len(train[(train.rent > 1500) & (train.rent < 1601) & (train.bad_resident == 1)]) /len(train[(train.rent > 1500) & (train.rent < 1601)]))
+    r4 = (len(train[(train.rent > 1600) & (train.rent < 1701) & (train.bad_resident == 1)]) /len(train[(train.rent >1600) & (train.rent < 1701)]))
+    r5 = (len(train[(train.rent > 1700) & (train.rent < 1801) & (train.bad_resident == 1)]) /len(train[(train.rent >1700) & (train.rent < 1801)]))
+    r6 = (len(train[(train.rent > 1800) & (train.rent < 1901) & (train.bad_resident == 1)]) /len(train[(train.rent >1800) & (train.rent < 1901)]))
+    r7 = (len(train[(train.rent > 1900) & (train.rent < 6000) & (train.bad_resident == 1)]) /len(train[(train.rent >1900) & (train.rent < 6000)]))
+    rs = pd.DataFrame(data = { 
+                                '$1300-$1400': r1, '$1400-$1500': r2,'$1500-$1600': r3, '$1600-$1700': r4, 
+                                '$1700-$1800': r5, '$1800-$1900': r6, '$2000 and above': r7,
+                             }, index = [0])
+
+
+    rs = rs.round(2) * 100
+
+
+
+    plt.figure(figsize=(12, 6))
+    color= ['#cccccc', '#cccccc' , '#cccccc', '#cccccc', 'red', '#cccccc', '#cccccc']
+    ax = sns.barplot(data=rs, palette=color, edgecolor = ['#cccccc', '#cccccc' , '#cccccc', '#cccccc', 'black', '#cccccc', '#cccccc'])
+
+    for p in ax.patches:
+            ax.annotate(f"{round(p.get_height())}%", (p.get_x() + p.get_width() / 2., p.get_height()),
+                         ha='center', va='center', xytext=(0, 5), textcoords='offset points', fontsize= 13)
+
+    plt.title('Relation of Rent with Resident',fontsize=14)
+    ax.set_xlabel('Rent Range', fontsize=12)
+    ax.set_ylabel('Percent', fontsize=12)
+    plt.ylim(0,7)
     sns.despine()
-    plt.legend(loc='upper right', bbox_to_anchor=(1.2, 1))
-    plt.title('Relation of rent with Resident')
-    plt.xlabel('Count')
-    plt.ylabel(col.capitalize())
-    plt.legend(labels= ['Good Resident','Bad resident'])
-    
-    plt.subplot(212)
-    train_bad_resident = train[train['bad_resident']==1]
-    rent_bin_bad = pd.cut(train_bad_resident['rent'], bins = bins)
-    sns.countplot(y=rent_bin_bad,data=train_bad_resident, color = 'dodgerblue', edgecolor = 'black')
-    sns.despine()
-    plt.title('Relation of rent with Bad Resident')
-    plt.xlabel('Count')
-    plt.ylabel(col.capitalize())
-    
+    plt.show()
     
     
 def chi_test(train, col = False, bins = False):
