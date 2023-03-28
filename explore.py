@@ -448,6 +448,7 @@ def viz_bad_resident_risk(train):
                          '600-700': r5, '700-800': r6, '>800':r7}, index = [0])
     rs = rs.round(2) * 100
     
+    plt.figure(figsize= (10,6))
     sns.set_style("white")
     color= ['#CCCCCC', 'red', '#CCCCCC', '#CCCCCC', '#CCCCCC']
     bar= sns.barplot(data= rs, palette= color, edgecolor=['#CCCCCC', 'black', '#CCCCCC','#CCCCCC', '#CCCCCC'])
