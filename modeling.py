@@ -391,3 +391,17 @@ def best_model_bc():
 
     plt.show()
     
+    
+def best_models(df):
+    f= df.iloc[2:5]
+    g = df.iloc[7:]
+
+    df = pd.concat([f, g])
+
+    df['Model'] = df['Model'].replace({'xg_smote_nc_model':'XG Boost',
+                                     'rf_adasyn_model': 'Random Forest', 
+                                     'ensemble_model': 'Ensemble', 
+                                     'knn_model': 'KNN', 
+                                     'log_model': 'Logistic Regression'})
+    
+    return df    
